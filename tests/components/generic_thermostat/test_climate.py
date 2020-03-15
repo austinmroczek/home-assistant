@@ -22,6 +22,8 @@ from homeassistant.const import (
     SERVICE_TURN_ON,
     STATE_OFF,
     STATE_ON,
+    STATE_UNAVAILABLE,
+    STATE_UNKNOWN,
     TEMP_CELSIUS,
     TEMP_FAHRENHEIT,
 )
@@ -30,7 +32,7 @@ from homeassistant.core import DOMAIN as HASS_DOMAIN, CoreState, State, callback
 from homeassistant.setup import async_setup_component
 from homeassistant.util.unit_system import METRIC_SYSTEM
 
-from tests.common import assert_setup_component, mock_restore_cache
+from tests.common import assert_setup_component, mock_restore_cache, mock_state_change_event
 from tests.components.climate import common
 
 ENTITY = "climate.test"
@@ -270,6 +272,22 @@ async def test_sensor_bad_value(hass, setup_comp_2):
     state = hass.states.get(ENTITY)
     assert temp == state.attributes.get("current_temperature")
 
+async def test_sensor_unavailable_value(hass):
+    """Test when target sensor is Unavailable."""
+    assert await async_setup_component(
+        hass,
+        "climate",
+        {
+            "climate": {
+                "platform": "generic_thermostat",
+                "name": "unavailable",
+                "heater": ENT_SWITCH,
+                "target_sensor": "sensor.unavailable",
+            }
+        },
+    )
+    state = hass.states.get("climate.unavailable")
+    assert state.attributes.get("current_temperature") == None
 
 async def test_set_target_temp_heater_on(hass, setup_comp_2):
     """Test if target temperature turn heater on."""
@@ -1209,3 +1227,8 @@ def _mock_restore_cache(hass, temperature=20, hvac_mode=HVAC_MODE_OFF):
             ),
         ),
     )
+
+#async def test_sensor_unavailable(hass):
+#    """Test proper handling of sensor state unavailable."""
+#    hass.states.async_set(ENT_SENSOR, STATE_UNAVAILABLE)
+#    mock_state_change_event(hass, STATE_UNAVAILABLE)
