@@ -272,8 +272,27 @@ async def test_sensor_bad_value(hass, setup_comp_2):
     state = hass.states.get(ENTITY)
     assert temp == state.attributes.get("current_temperature")
 
-async def test_sensor_unavailable_value(hass):
+async def test_sensor_unknown(hass):
+    """Test when target sensor is Unknown."""
+    hass.states.async_set("sensor.unknown", STATE_UNKNOWN)    
+    assert await async_setup_component(
+        hass,
+        "climate",
+        {
+            "climate": {
+                "platform": "generic_thermostat",
+                "name": "unknown",
+                "heater": ENT_SWITCH,
+                "target_sensor": "sensor.unknown",
+            }
+        },
+    )
+    state = hass.states.get("climate.unknown")
+    assert state.attributes.get("current_temperature") == None
+
+async def test_sensor_unavailable(hass):
     """Test when target sensor is Unavailable."""
+    hass.states.async_set("sensor.unavailable", STATE_UNAVAILABLE)    
     assert await async_setup_component(
         hass,
         "climate",
