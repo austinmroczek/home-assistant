@@ -1,0 +1,1 @@
+"""Tests for the open weather map component."""
