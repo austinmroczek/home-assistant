@@ -37,7 +37,7 @@ zeroconf==0.38.1
 
 # Constrain pillow to 8.2.0 because later versions are causing issues in nightly builds.
 # https://github.com/home-assistant/core/issues/61756
-pillow==8.2.0
+pillow==9.0.0
 
 # Constrain pycryptodome to avoid vulnerability
 # see https://github.com/home-assistant/core/pull/16238
