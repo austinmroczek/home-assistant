@@ -2180,7 +2180,7 @@ skybellpy==0.6.3
 slackclient==2.5.0
 
 # homeassistant.components.xmpp
-slixmpp==1.8.2
+slixmpp==1.8.3
 
 # homeassistant.components.smart_meter_texas
 smart-meter-texas==0.4.7
